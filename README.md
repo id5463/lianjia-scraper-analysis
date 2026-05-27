@@ -71,6 +71,30 @@ install.packages(c("readr", "mice", "lmtest", "car", "ggplot2", "sandwich"))
 
 ---
 
+## ⚠️ Important: CAPTCHA Handling ⚠️ 重要：验证码处理
+
+Beike (ke.com) frequently presents CAPTCHAs during automated browsing. The crawler **does not solve them automatically**. Instead:
+
+1. A headed Chrome browser window will pop up
+2. If a CAPTCHA is detected, your PC **beeps 5 times** and the script waits
+3. **Solve the CAPTCHA manually** in the browser window
+4. **Press the `Alt` key** (one tap) to let the script continue
+5. If still blocked, it beeps again — solve and press `Alt` once more
+
+> The Alt key is edge-triggered: one press = one attempt. No need to hold it down.
+
+贝壳/链家经常弹出验证码。爬虫 **不会自动处理验证码**：
+
+1. 会弹出一个有头 Chrome 浏览器窗口
+2. 检测到验证码时，电脑会 **响 5 声提示音**，脚本暂停等待
+3. **在浏览器窗口中手动通过验证**
+4. **按一下 `Alt` 键**（轻触即可），脚本继续
+5. 如果仍然被拦截，会再次响铃 — 重复以上步骤
+
+> Alt 键是边缘触发：按一下算一次，不需要长按。
+
+---
+
 ## Usage 用法
 
 ### Pipeline (recommended) 完整管道（推荐）
