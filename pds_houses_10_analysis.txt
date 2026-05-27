@@ -1,0 +1,199 @@
+═══════════════════════════════════════════════════════════════════
+  LIANJIA HOUSE PRICE REGRESSION ANALYSIS
+  Data file: C:\Users\a\.hermes\hermes-agent\pds_houses_10.csv 
+  Date: 2026-05-27 22:06:43 
+═══════════════════════════════════════════════════════════════════
+
+1. DATA OVERVIEW
+───────────────────────────────────────────────────────────────────
+Total observations: 50 
+
+--- Variable Descriptions ---
+  floor  : total floors of the building (numeric)
+  year   : construction year (numeric, 92% missing → imputed)
+  area   : floor area in sqm (numeric)
+  layout : total rooms = bedrooms + living rooms (numeric)
+  price  : total price in 10k CNY (numeric, dependent variable)
+
+2. DESCRIPTIVE STATISTICS
+───────────────────────────────────────────────────────────────────
+
+--- Summary Statistics ---
+     floor            year           area            layout        price       
+ Min.   : 5.00   Min.   :2010   Min.   : 32.22   Min.   :2.0   Min.   :  9.60  
+ 1st Qu.: 7.00   1st Qu.:2013   1st Qu.: 78.96   1st Qu.:4.0   1st Qu.: 25.75  
+ Median :16.50   Median :2016   Median : 97.50   Median :4.0   Median : 41.50  
+ Mean   :18.16   Mean   :2016   Mean   : 99.57   Mean   :4.2   Mean   : 45.20  
+ 3rd Qu.:30.75   3rd Qu.:2018   3rd Qu.:121.50   3rd Qu.:5.0   3rd Qu.: 59.50  
+ Max.   :34.00   Max.   :2023   Max.   :169.07   Max.   :6.0   Max.   :125.00  
+                 NAs    :46                                                    
+
+--- Standard Deviations ---
+  floor   : sd = 11.6992
+  year    : sd = 5.4772
+  area    : sd = 28.4738
+  layout  : sd = 0.9035
+  price   : sd = 25.2275
+
+--- Missing Values ---
+  floor   : 0 / 50 missing (0.0%)
+  year    : 46 / 50 missing (92.0%)
+  area    : 0 / 50 missing (0.0%)
+  layout  : 0 / 50 missing (0.0%)
+  price   : 0 / 50 missing (0.0%)
+
+--- Correlation Matrix (complete cases) ---
+        floor   area layout  price
+floor  1.0000 0.3229 0.2884 0.6429
+area   0.3229 1.0000 0.8983 0.7275
+layout 0.2884 0.8983 1.0000 0.7177
+price  0.6429 0.7275 0.7177 1.0000
+
+3. MISSING VALUE IMPUTATION (MICE)
+───────────────────────────────────────────────────────────────────
+
+Method: Predictive Mean Matching (PMM)
+Number of imputations: m = 5
+Observations imputed: 46 
+
+--- Year Variable: Before vs After Imputation ---
+  Original: mean = 2016.00, sd = 5.48 (n = 4)
+  Imputed:  mean = 2016.00, sd = 4.94 (n = 50)
+
+--- Imputed Year Distribution ---
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   2010    2010    2017    2016    2022    2023 
+
+4. REGRESSION MODEL
+───────────────────────────────────────────────────────────────────
+Formula: price ~ floor + year + area + layout
+Data: imputed dataset (complete case 1 of 5)
+
+
+Call:
+lm(formula = price ~ floor + year + area + layout, data = data_complete)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-31.591  -8.302  -1.112   7.195  30.105 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -658.9760   807.1204  -0.816   0.4185    
+floor          0.9878     0.1731   5.705 8.53e-07 ***
+year           0.3088     0.4005   0.771   0.4447    
+area           0.2194     0.1588   1.382   0.1738    
+layout         9.9459     4.8785   2.039   0.0474 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 13.41 on 45 degrees of freedom
+Multiple R-squared:  0.7404,	Adjusted R-squared:  0.7173 
+F-statistic: 32.09 on 4 and 45 DF,  p-value: 1.171e-12
+
+
+--- Pooled Results Across 5 Imputations ---
+         term     estimate    std.error  statistic        df      p.value
+1 (Intercept) -282.0902897 1467.6786762 -0.1922017  5.186101 8.548848e-01
+2       floor    0.9808059    0.1727482  5.6776629 42.586459 1.106146e-06
+3        year    0.1221910    0.7292494  0.1675573  5.182775 8.732745e-01
+4        area    0.2556974    0.1586552  1.6116549 40.456786 1.148123e-01
+5      layout    9.0047410    4.8809816  1.8448627 41.837363 7.214450e-02
+          2.5 %       97.5 %      conf.low    conf.high
+1 -4.014519e+03 3450.3384753 -4.014519e+03 3450.3384753
+2  6.323282e-01    1.3292837  6.323282e-01    1.3292837
+3 -1.732693e+00    1.9770755 -1.732693e+00    1.9770755
+4 -6.484394e-02    0.5762388 -6.484394e-02    0.5762388
+5 -8.466132e-01   18.8560952 -8.466132e-01   18.8560952
+
+5. DIAGNOSTIC PLOTS
+───────────────────────────────────────────────────────────────────
+null device 
+          1 
+  [SAVED] diagnostic_plots.png
+  [SAVED] actual_vs_predicted.png
+  [SAVED] residual_histogram.png
+  [SAVED] area_vs_price.png
+
+6. AUTOCORRELATION TEST (Durbin-Watson)
+───────────────────────────────────────────────────────────────────
+H0: No autocorrelation in residuals
+
+
+	Durbin-Watson test
+
+data:  model_full
+DW = 1.9653, p-value = 0.465
+alternative hypothesis: true autocorrelation is greater than 0
+
+CONCLUSION: DW = 1.9653, p = 0.4650 → No autocorrelation (p >= 0.05)
+
+7. HETEROSCEDASTICITY TEST (Breusch-Pagan)
+───────────────────────────────────────────────────────────────────
+H0: Homoscedasticity (constant variance of residuals)
+
+
+	studentized Breusch-Pagan test
+
+data:  model_full
+BP = 14.407, df = 4, p-value = 0.006103
+
+CONCLUSION: BP = 14.4072, p = 0.0061 → Heteroscedasticity DETECTED (p < 0.05)
+→ Applying Huber-White HC3 robust standard errors
+
+8. HETEROSCEDASTICITY-ROBUST STANDARD ERRORS (HC3)
+───────────────────────────────────────────────────────────────────
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -658.97596  840.04470 -0.7845   0.43688    
+floor          0.98780    0.15883  6.2194 1.474e-07 ***
+year           0.30884    0.41708  0.7405   0.46286    
+area           0.21945    0.18424  1.1911   0.23987    
+layout         9.94586    4.85410  2.0490   0.04632 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+9. MODEL COMPARISON
+───────────────────────────────────────────────────────────────────
+
+--- Model Comparison Table ---
+                                Model     R2 Adj_R2   AIC   BIC Resid_SE
+M1_area                       M1_area 0.5293 0.5195 432.0 437.7    17.49
+M2_area_floor           M2_area_floor 0.7151 0.7030 408.9 416.5    13.75
+M3_area_floor_year M3_area_floor_year 0.7164 0.6979 410.7 420.2    13.87
+M4_full                       M4_full 0.7404 0.7173 408.2 419.7    13.41
+
+Best model (lowest AIC):    M4_full
+Best model (highest Adj R²): M4_full
+
+10. SUMMARY OF FINDINGS
+═══════════════════════════════════════════════════════════════════
+
+Dataset: 50 listings from Pingdingshan, 4 with original year data
+Model R-squared: 0.7404 (Adjusted: 0.7173)
+F-statistic: 32.09 on 4 and 45 DF (p-value: 1.170619e-12)
+
+--- Coefficient Interpretation ---
+  floor : +0.99  → each additional floor adds ~10k CNY
+  year  : +0.31  → each newer year adds ~3k CNY (not significant)
+  area  : +0.22  → each additional sqm adds ~2k CNY (not significant)
+  layout: +9.95  → each additional room adds ~100k CNY
+
+--- Diagnostic Tests ---
+  Durbin-Watson: DW = 1.9653, p = 0.4650 → no autocorrelation
+  Breusch-Pagan: BP = 14.4072, p = 0.0061 → HETEROSCEDASTICITY (corrected via HC3)
+
+--- Model Comparison Winner ---
+  Best model: M4_full (AIC = 408.24, Adj R² = 0.7173)
+
+--- Output Files ---
+  pds_houses_10_analysis.txt   - this text output
+  diagnostic_plots.png    - 4-panel diagnostic plots
+  actual_vs_predicted.png - actual vs predicted price
+  residual_histogram.png  - residual distribution
+  area_vs_price.png       - area vs price scatter
+
+═══ END OF ANALYSIS ═══════════════════════════════════════════════
