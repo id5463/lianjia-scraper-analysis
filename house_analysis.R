@@ -19,6 +19,27 @@ library(car)
 library(ggplot2)
 library(sandwich)
 
+# ── Auto-detect working directory ─────────────────────────────────────
+# Works with Rscript and source(chdir = TRUE)
+script_dir <- tryCatch(
+  {
+    # When sourced via source(..., chdir = TRUE)
+    dirname(get("ofile", envir = sys.frame(1)))
+  },
+  error = function(e) {
+    # When run via Rscript
+    args_all <- commandArgs(FALSE)
+    file_flag <- grep("^--file=", args_all, value = TRUE)
+    if (length(file_flag) > 0) {
+      dirname(sub("^--file=", "", file_flag))
+    } else {
+      "."
+    }
+  }
+)
+if (script_dir != ".") setwd(script_dir)
+cat("Working directory:", getwd(), "\n")
+
 # ── Accept CSV path from command line ─────────────────────────────────
 args <- commandArgs(trailingOnly = TRUE)
 csv_file <- if (length(args) >= 1) args[1] else "pds_houses_10.csv"
